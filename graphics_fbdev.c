@@ -16,6 +16,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include <fcntl.h>
@@ -31,6 +32,8 @@
 
 #include "minui.h"
 #include "graphics.h"
+
+#define __unused
 
 static gr_surface fbdev_init(minui_backend*);
 static gr_surface fbdev_flip(minui_backend*);

@@ -1,0 +1,13 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+
+Name: minui
+Description: Library for minimal UI framebuffer applications.
+Version: 0.0.1
+Libs: -lminui 
+Libs.private: -lpng16
+Cflags: 
+Requires: libpng

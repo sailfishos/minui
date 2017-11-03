@@ -1,0 +1,6 @@
+*.a
+*.o
+documentation.list
+installroot
+RPMS
+
