@@ -16,6 +16,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include <fcntl.h>
@@ -50,6 +51,11 @@ static unsigned char gr_current_b = 255;
 static unsigned char gr_current_a = 255;
 
 static GRSurface* gr_draw = NULL;
+
+minui_backend* open_adf()
+{
+    return 0;
+}
 
 static bool outside(int x, int y)
 {

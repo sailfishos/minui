@@ -19,6 +19,7 @@
 
 #include <fcntl.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <sys/ioctl.h>
 #include <sys/mman.h>
@@ -32,6 +33,7 @@
 #include "minui.h"
 
 extern char* locale;
+extern char res_path[];
 
 #define SURFACE_DATA_ALIGNMENT 8
 
@@ -51,9 +53,10 @@ static int open_png(const char* name, png_structp* png_ptr, png_infop* info_ptr,
     int result = 0;
 
     if(*name != '/') {
-        snprintf(resPath, sizeof(resPath), "/res/images/%s.png", name);
+        snprintf(resPath, sizeof(resPath), "%s/%s.png", res_path, name);
     }else{
-        strlcpy(resPath,name,sizeof(resPath));
+        strncpy(resPath,name,sizeof(resPath) - 1);
+        resPath[sizeof(resPath) - 1] = '\0';
     }
 
     FILE* fp = fopen(resPath, "rb");
@@ -124,6 +127,7 @@ static int open_png(const char* name, png_structp* png_ptr, png_infop* info_ptr,
     }
 
     png_read_update_info(*png_ptr, *info_ptr);
+
     png_get_IHDR(*png_ptr, *info_ptr, width, height, &bit_depth,
             &color_type, NULL, NULL, NULL);
 
