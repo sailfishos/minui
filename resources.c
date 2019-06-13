@@ -47,7 +47,7 @@ static gr_surface malloc_surface(size_t data_size) {
 }
 
 static int open_png(const char* name, png_structp* png_ptr, png_infop* info_ptr,
-                    png_uint_32* width, png_uint_32* height, png_byte* channels) {
+                    png_uint_32* width, png_uint_32* height, png_byte* channels, FILE** fd) {
     char resPath[256] = {0};
     unsigned char header[8] = {0};
     int result = 0;
@@ -59,13 +59,13 @@ static int open_png(const char* name, png_structp* png_ptr, png_infop* info_ptr,
         resPath[sizeof(resPath) - 1] = '\0';
     }
 
-    FILE* fp = fopen(resPath, "rb");
-    if (fp == NULL) {
+    *fd = fopen(resPath, "rb");
+    if (*fd == NULL) {
         result = -1;
         goto exit;
     }
 
-    size_t bytesRead = fread(header, 1, sizeof(header), fp);
+    size_t bytesRead = fread(header, 1, sizeof(header), *fd);
     if (bytesRead != sizeof(header)) {
         result = -2;
         goto exit;
@@ -93,7 +93,7 @@ static int open_png(const char* name, png_structp* png_ptr, png_infop* info_ptr,
         goto exit;
     }
 
-    png_init_io(*png_ptr, fp);
+    png_init_io(*png_ptr, *fd);
     png_set_sig_bytes(*png_ptr, sizeof(header));
     png_read_info(*png_ptr, *info_ptr);
 
@@ -139,8 +139,8 @@ static int open_png(const char* name, png_structp* png_ptr, png_infop* info_ptr,
     if (result < 0) {
         png_destroy_read_struct(png_ptr, info_ptr, NULL);
     }
-    if (fp != NULL) {
-        fclose(fp);
+    if (*fd != NULL) {
+        fclose(*fd);
     }
 
     return result;
@@ -222,11 +222,15 @@ int res_create_display_surface(const char* name, gr_surface* pSurface) {
     png_infop info_ptr = NULL;
     png_uint_32 width, height;
     png_byte channels;
+    FILE *fd = NULL;
 
     *pSurface = NULL;
 
-    result = open_png(name, &png_ptr, &info_ptr, &width, &height, &channels);
-    if (result < 0) return result;
+    result = open_png(name, &png_ptr, &info_ptr, &width, &height, &channels, &fd);
+    if (result < 0) {
+        if (fd) fclose(fd);
+        return result;
+    }
 
     surface = init_display_surface(width, height);
     if (surface == NULL) {
@@ -247,6 +251,7 @@ int res_create_display_surface(const char* name, gr_surface* pSurface) {
   exit:
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
     if (result < 0 && surface != NULL) free(surface);
+    if (fd) fclose(fd);
     return result;
 }
 
@@ -257,13 +262,17 @@ int res_create_multi_display_surface(const char* name, int* frames, gr_surface**
     png_infop info_ptr = NULL;
     png_uint_32 width, height;
     png_byte channels;
+    FILE *fd = NULL;
     int i;
 
     *pSurface = NULL;
     *frames = -1;
 
-    result = open_png(name, &png_ptr, &info_ptr, &width, &height, &channels);
-    if (result < 0) return result;
+    result = open_png(name, &png_ptr, &info_ptr, &width, &height, &channels, &fd);
+    if (result < 0) {
+        if (fd) fclose(fd);
+        return result;
+    }
 
     *frames = 1;
     png_textp text;
@@ -321,6 +330,7 @@ exit:
             free(surface);
         }
     }
+    if (fd) fclose(fd);
     return result;
 }
 
@@ -331,11 +341,15 @@ int res_create_alpha_surface(const char* name, gr_surface* pSurface) {
     png_infop info_ptr = NULL;
     png_uint_32 width, height;
     png_byte channels;
+    FILE *fd = NULL;
 
     *pSurface = NULL;
 
-    result = open_png(name, &png_ptr, &info_ptr, &width, &height, &channels);
-    if (result < 0) return result;
+    result = open_png(name, &png_ptr, &info_ptr, &width, &height, &channels, &fd);
+    if (result < 0) {
+        if (fd) fclose(fd);
+        return result;
+    }
 
     if (channels != 1) {
         result = -7;
@@ -364,6 +378,7 @@ int res_create_alpha_surface(const char* name, gr_surface* pSurface) {
   exit:
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
     if (result < 0 && surface != NULL) free(surface);
+    if (fd) fclose(fd);
     return result;
 }
 
@@ -393,6 +408,7 @@ int res_create_localized_alpha_surface(const char* name,
     png_infop info_ptr = NULL;
     png_uint_32 width, height;
     png_byte channels;
+    FILE *fd = NULL;
 
     *pSurface = NULL;
 
@@ -405,8 +421,11 @@ int res_create_localized_alpha_surface(const char* name,
         goto exit;
     }
 
-    result = open_png(name, &png_ptr, &info_ptr, &width, &height, &channels);
-    if (result < 0) return result;
+    result = open_png(name, &png_ptr, &info_ptr, &width, &height, &channels, &fd);
+    if (result < 0) {
+        if (fd) fclose(fd);
+        return result;
+    }
 
     if (channels != 1) {
         result = -7;
@@ -454,6 +473,7 @@ int res_create_localized_alpha_surface(const char* name,
 exit:
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
     if (result < 0 && surface != NULL) free(surface);
+    if (fd) fclose(fd);
     return result;
 }
 
