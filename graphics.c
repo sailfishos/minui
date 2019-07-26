@@ -444,6 +444,11 @@ int gr_init(void)
     }
 
     if (!gr_draw) {
+        /* init the backend twice. this is required on certain devices */
+        gr_backend = open_drm();
+        gr_draw = gr_backend->init(gr_backend);
+        gr_backend->exit(gr_backend);
+
         gr_backend = open_drm();
         gr_draw = gr_backend->init(gr_backend);
 
