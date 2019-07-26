@@ -7,6 +7,7 @@ License:    ASL 2.0
 URL:        https://github.com/sailfishos/minui.git
 Source0:    %{name}-%{version}.tar.bz2
 BuildRequires:  libpng-devel
+BuildRequires:  libdrm-devel
 
 %description
 %{summary}.

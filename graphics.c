@@ -438,6 +438,20 @@ int gr_init(void)
     if (!gr_draw) {
         gr_backend = open_fbdev();
         gr_draw = gr_backend->init(gr_backend);
+        if (!gr_draw) {
+            gr_backend->exit(gr_backend);
+        }
+    }
+
+    if (!gr_draw) {
+        /* init the backend twice. this is required on certain devices */
+        gr_backend = open_drm();
+        gr_draw = gr_backend->init(gr_backend);
+        gr_backend->exit(gr_backend);
+
+        gr_backend = open_drm();
+        gr_draw = gr_backend->init(gr_backend);
+
         if (gr_draw == NULL) {
             return -1;
         }
