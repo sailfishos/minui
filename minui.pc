@@ -8,6 +8,6 @@ Name: minui
 Description: Library for minimal UI framebuffer applications.
 Version: 0.0.1
 Libs: -lminui 
-Libs.private: -lpng16
+Libs.private: -lpng16 -ldrm
 Cflags: 
-Requires: libpng
+Requires: libpng libdrm
