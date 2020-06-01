@@ -8,7 +8,7 @@ CFLAGS = -Wall -DOVERSCAN_PERCENT=0 -I/usr/include/ -O2 -W `pkg-config --cflags 
 LDFLAGS = -lpng -lc -lz -lm `pkg-config --libs libdrm`
 INCPATH =
 
-all: $(TARGET)
+all: $(TARGET) minui.pc
 
 $(TARGET): $(OBJECTS)
 	$(AR) $(TARGET) $(OBJECTS)
@@ -28,10 +28,13 @@ graphics_drm.o: graphics_drm.c minui.h graphics.h
 resources.o: resources.c minui.h
 	$(CC) -c $(CFLAGS) $(INCPATH) -o resources.o resources.c
 
+minui.pc:
+	sed "s=@LIB@=$(LIB)=g" minui.pc.in > minui.pc
+
 install: all
-	$(INSTALL_FILE) $(TARGET) $(DESTDIR)/usr/lib/$(TARGET)
+	$(INSTALL_FILE) $(TARGET) $(DESTDIR)/usr/$(LIB)/$(TARGET)
 	$(INSTALL_FILE) minui.h $(DESTDIR)/usr/include/minui/minui.h
-	$(INSTALL_FILE) minui.pc $(DESTDIR)/usr/lib/pkgconfig/minui.pc
+	$(INSTALL_FILE) minui.pc $(DESTDIR)/usr/$(LIB)/pkgconfig/minui.pc
 
 clean:
 	rm -f *.o $(TARGET)
