@@ -457,11 +457,16 @@ int gr_init(void)
         }
     }
 
-    overscan_offset_x = gr_draw->width * overscan_percent / 100;
-    overscan_offset_y = gr_draw->height * overscan_percent / 100;
+    gr_flip();
+    if (gr_draw == NULL)
+        return -1;
 
     gr_flip();
-    gr_flip();
+    if (gr_draw == NULL)
+        return -1;
+
+    overscan_offset_x = gr_draw->width * overscan_percent / 100;
+    overscan_offset_y = gr_draw->height * overscan_percent / 100;
 
     return 0;
 }
