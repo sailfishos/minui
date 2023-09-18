@@ -1,6 +1,6 @@
 Name:       minui-devel
 Summary:    Library for minimal UI framebuffer applications.
-Version:    0.0.1
+Version:    0.0.8
 Release:    1
 License:    ASL 2.0
 URL:        https://github.com/sailfishos/minui.git
