@@ -24,6 +24,7 @@ make install DESTDIR=%{?buildroot} LIB=%{_lib}
 %files
 %defattr(-,root,root,-)
 %dir %{_includedir}/minui
+%license LICENSE
 %{_includedir}/minui/minui.h
 %{_libdir}/libminui.a
 %{_libdir}/pkgconfig/minui.pc
