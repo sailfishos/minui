@@ -18,11 +18,9 @@ BuildRequires:  libdrm-devel
 make %{?_smp_mflags} LIB=%{_lib}
 
 %install
-rm -rf %{buildroot}
 make install DESTDIR=%{?buildroot} LIB=%{_lib}
 
 %files
-%defattr(-,root,root,-)
 %dir %{_includedir}/minui
 %license LICENSE
 %{_includedir}/minui/minui.h
