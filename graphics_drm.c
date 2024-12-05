@@ -378,6 +378,21 @@ static GRSurface* drm_init(minui_backend* backend __unused) {
     drm_enable_crtc(drm_fd, main_monitor_crtc, drm_surfaces[1]);
     return &(drm_surfaces[0]->base);
 }
+static GRSurface* drm_init_retry(minui_backend* backend __unused) {
+    /* Retry init for a moment in case display arrives just a bit late */
+    for (int i = 0; i < 15; ++i) {
+        GRSurface* surface = drm_init(backend);
+        if (surface) {
+            return surface;
+        }
+        fprintf(stderr, "drm_init() failed, waiting 3 secs and retrying\n");
+        sleep(3);
+    }
+
+    fprintf(stderr, "Giving up with drm_init()\n");
+    return NULL;
+}
+
 static GRSurface* drm_flip(minui_backend* backend __unused) {
     int ret;
     ret = drmModePageFlip(drm_fd, main_monitor_crtc->crtc_id,
@@ -399,7 +414,7 @@ static void drm_exit(minui_backend* backend __unused) {
     drm_fd = -1;
 }
 static minui_backend drm_backend = {
-    .init = drm_init,
+    .init = drm_init_retry,
     .flip = drm_flip,
     .blank = drm_blank,
     .exit = drm_exit,
