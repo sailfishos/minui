@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#define _GNU_SOURCE
+
 #include <drm_fourcc.h>
 #include <fcntl.h>
 #include <poll.h>
@@ -31,7 +33,7 @@
 #include "graphics.h"
 #define ARRAY_SIZE(A) (sizeof(A)/sizeof(*(A)))
 
-#define __unused
+#define __unused        __attribute__((__unused__))
 #ifndef DRM_MODE_CONNECTOR_DSI
 #define DRM_MODE_CONNECTOR_DSI 16
 #endif

@@ -1,5 +1,5 @@
 Name:       minui-devel
-Summary:    Library for minimal UI framebuffer applications.
+Summary:    Library for minimal UI framebuffer applications
 Version:    0.0.8
 Release:    1
 License:    ASL 2.0
@@ -15,10 +15,10 @@ BuildRequires:  libdrm-devel
 %setup -q -n %{name}-%{version}
 
 %build
-make %{?_smp_mflags} LIB=%{_lib}
+%make_build LIB=%{_lib}
 
 %install
-make install DESTDIR=%{?buildroot} LIB=%{_lib}
+%make_install LIB=%{_lib}
 
 %files
 %dir %{_includedir}/minui
