@@ -20,6 +20,7 @@
 #include <fcntl.h>
 #include <dirent.h>
 #include <sys/epoll.h>
+#include <unistd.h>
 
 #include <linux/input.h>
 
@@ -162,7 +163,6 @@ int ev_wait(int timeout)
 void ev_dispatch(void)
 {
     int n;
-    int ret;
 
     for (n = 0; n < npolledevents; n++) {
         struct fd_info *fdi = polledevents[n].data.ptr;

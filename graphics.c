@@ -290,7 +290,7 @@ void gr_blit(GRSurface* source, int sx, int sy, int w, int h, int dx, int dy) {
 }
 
 void gr_blit_rgb(GRSurface* source,  int sx, int sy,int w, int h, int dx, int dy) {
-    int i,j;
+    int j;
     if (source == NULL) return;
 
     dx += overscan_offset_x;

@@ -33,7 +33,7 @@
 #include "minui.h"
 #include "graphics.h"
 
-#define __unused
+#define __unused        __attribute__((__unused__))
 
 static gr_surface fbdev_init(minui_backend*);
 static gr_surface fbdev_flip(minui_backend*);

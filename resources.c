@@ -123,7 +123,7 @@ static int open_png(const char* name, png_structp* png_ptr, png_infop* info_ptr,
 
     if (png_get_valid(*png_ptr, *info_ptr, PNG_INFO_tRNS)) {
         fprintf(stdout,"Has PNG_INFO_tRNS!\n");
-        png_set_tRNS_to_alpha(png_ptr);
+        png_set_tRNS_to_alpha(*png_ptr);
     }
 
     png_read_update_info(*png_ptr, *info_ptr);
@@ -438,7 +438,6 @@ int res_create_localized_alpha_surface(const char* name,
         png_read_row(png_ptr, row, NULL);
         int w = (row[1] << 8) | row[0];
         int h = (row[3] << 8) | row[2];
-        int len = row[4];
         char* loc = (char*)row+5;
 
         if (y+1+h >= height || matches_locale(loc, locale)) {
